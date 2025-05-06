@@ -1,84 +1,81 @@
-````markdown
-# Controle de Juntas do Robô NAO por Q-Learning
+**Controle de Juntas do Robô NAO por Q-Learning**
 
-## Descrição
+Este projeto implementa um algoritmo de Q-Learning para controlar as juntas do robô NAO em uma simulação no CoppeliaSim. O objetivo é ajustar o ângulo de uma junta específica (braço esquerdo) para alcançar um ângulo alvo definido, utilizando aprendizado por reforço.
+Descrição
+O programa utiliza a biblioteca coppeliasim_zmqremoteapi_client para interagir com o CoppeliaSim e controlar as juntas do robô NAO. O algoritmo de Q-Learning é configurado para aprender a melhor ação (aumentar, diminuir ou manter o ângulo) com base em uma tabela Q que mapeia estados discretos a ações.
+Principais Componentes
 
-Este projeto implementa um controle de juntas do robô NAO utilizando Q-Learning. O objetivo é treinar o robô para atingir um ângulo alvo específico, ajustando a posição das suas juntas por meio de um processo de aprendizagem por reforço.
+Classe NAORobotController: Gerencia a conexão com o CoppeliaSim, configura as juntas do robô e executa o treinamento por Q-Learning.
+Parâmetros de Q-Learning:
+EPSILON: Taxa de exploração inicial (0.2).
+ALPHA: Taxa de aprendizado (0.2).
+GAMMA: Fator de desconto (0.9).
+NUM_EPISODES: Número de episódios (100).
+NUM_ACTIONS: Ações possíveis (-1: diminuir, 0: manter, +1: aumentar).
+ANGLE_LIMIT: Limite de ângulo (±90° em radianos).
 
-A técnica de Q-Learning é usada para aprender a política de controle ideal, ajustando as posições das juntas com base na recompensa associada à proximidade do ângulo alvo.
 
-## Requisitos
+Recompensa: Calculada como a negativa da diferença absoluta entre o ângulo atual e o ângulo alvo.
+Exploração: Utiliza política epsilon-greedy com decaimento de epsilon.
 
-- **CoppeliaSim**: Simulador de robótica utilizado para a simulação do robô NAO.
-- **Biblioteca RemoteAPIClient**: Utilizada para estabelecer a comunicação entre o código Python e o CoppeliaSim.
-- **Python 3.x**: A linguagem de programação utilizada para implementar o código.
+Pré-requisitos
 
-### Dependências
+Python 3.8 ou superior
+CoppeliaSim (versão compatível com a API ZMQ Remote)
+Bibliotecas Python:pip install numpy coppeliasim-zmqremoteapi-client
 
-1. **CoppeliaSim** (anteriormente V-REP) com a API remota habilitada.
-2. **numpy**: Biblioteca para manipulação de arrays e operações matemáticas.
-3. **math**: Biblioteca padrão do Python para cálculos matemáticos.
 
-Instale a biblioteca `numpy` com o seguinte comando:
-```bash
-pip install numpy
-````
 
-## Arquitetura
+Como Executar
 
-### Classe `NAORobotController`
+Configurar o CoppeliaSim:
 
-A classe `NAORobotController` é responsável por controlar o robô NAO dentro da simulação CoppeliaSim, realizando as operações de:
+Certifique-se de que o CoppeliaSim está instalado e configurado.
+Carregue a cena do robô NAO no CoppeliaSim.
 
-* **Conectar e configurar a simulação**.
-* **Obter e ajustar as posições das juntas do robô**.
-* **Implementar o algoritmo de Q-Learning para aprender o controle das juntas**.
 
-### Q-Learning
+Instalar dependências:
+pip install -r requirements.txt
 
-O Q-Learning é implementado de forma simplificada para ajustar uma única junta do braço esquerdo do robô NAO. A cada episódio, o algoritmo tenta alcançar um ângulo alvo ajustando a posição da junta com base na política epsilon-greedy.
 
-### Parâmetros de Q-Learning
-
-* **EPSILON**: Taxa de exploração inicial (20%).
-* **ALPHA**: Taxa de aprendizado (20%).
-* **GAMMA**: Fator de desconto (90%).
-* **NUM\_EPISODES**: Número de episódios para o treinamento (100 episódios).
-* **MAX\_STEPS**: Número máximo de passos por episódio (1 passo).
-* **NUM\_ACTIONS**: Número de ações possíveis (-1, 0, +1 para diminuir, manter e aumentar o ângulo, respectivamente).
-* **ANGLE\_LIMIT**: Limite do ângulo em radianos (±90 graus).
-* **MIN\_EPSILON**: Valor mínimo para o epsilon (decai ao longo do tempo).
-* **EPSILON\_DECAY**: Taxa de decaimento do epsilon (0.995 por episódio).
-
-## Como Usar
-
-1. **Conectar ao CoppeliaSim**: O código utiliza a biblioteca `RemoteAPIClient` para conectar-se ao CoppeliaSim. A simulação do robô NAO deve estar configurada com a API remota habilitada.
-
-2. **Rodar o Código**: Basta executar o script Python para iniciar o treinamento do robô.
-
-```bash
+Executar o programa:
 python nao_qlearning.py
-```
 
-O robô irá aprender a ajustar a posição da junta do braço esquerdo para atingir um ângulo de 45° ao longo de 100 episódios.
+O programa iniciará a simulação, executará o treinamento por Q-Learning para alcançar um ângulo alvo de 45° e exibirá o progresso de cada episódio.
 
-3. **Resultados**: Durante o treinamento, o código imprime a recompensa total acumulada por episódio, o ângulo atual da junta e informações sobre o progresso do treinamento.
+Parar a simulação:
 
-## Detalhes do Algoritmo de Q-Learning
+O programa encerra automaticamente após encontrar o ângulo alvo (com tolerância de ±0.5°) ou após completar os episódios definidos.
+A simulação é parada e a conexão encerrada ao final.
 
-* **Estados**: O estado é baseado na posição da junta, discretizada em 10 estados possíveis.
-* **Ações**: A ação pode ser -1 (diminuir o ângulo), 0 (manter o ângulo) ou +1 (aumentar o ângulo).
-* **Recompensa**: A recompensa é calculada como a distância negativa entre a posição atual da junta e o ângulo alvo de 45° (quanto mais próximo, maior a recompensa).
 
-### Ajuste de Parâmetros
 
-É possível ajustar os parâmetros do Q-Learning, como `EPSILON`, `ALPHA`, `GAMMA`, e o número de episódios, para testar o desempenho do algoritmo em diferentes condições.
+Estrutura do Código
 
-## Conclusão
+nao_qlearning.py: Script principal contendo a implementação do controlador e do algoritmo Q-Learning.
+Classe NAORobotController:
+Métodos para conexão com CoppeliaSim, configuração de juntas, escolha de ações e atualização da tabela Q.
+Função q_learning para executar o treinamento.
 
-O controle de juntas do robô NAO usando Q-Learning permite que o robô aprenda de forma autônoma a ajustar suas juntas para atingir posições específicas, utilizando técnicas de aprendizado por reforço. Este projeto pode ser expandido para incluir múltiplas juntas ou diferentes objetivos de controle.
 
-## Licença
+Função main: Inicializa o controlador, executa o treinamento e gerencia exceções.
 
-Este projeto é de código aberto e está licenciado sob a Licença MIT.
+Resultados
 
+O programa imprime o progresso de cada episódio, incluindo a recompensa total e o ângulo atual em radianos e graus.
+O treinamento termina quando o ângulo atual está dentro de ±0.5° do ângulo alvo (45°).
+
+Limitações
+
+O exemplo simplifica o controle para uma única junta (braço esquerdo).
+A discretização do espaço de estados é básica (10 estados).
+A simulação pode ser sensível à configuração do CoppeliaSim.
+
+Contribuições
+Contribuições são bem-vindas! Para sugerir melhorias ou relatar problemas:
+
+Abra uma issue no repositório.
+Envie um pull request com suas alterações.
+
+Licença
+Este projeto está licenciado sob a MIT License.
