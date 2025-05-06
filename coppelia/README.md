@@ -3,7 +3,7 @@
 Este projeto implementa um algoritmo de Q-Learning para controlar as juntas do robô NAO em uma simulação no CoppeliaSim. O objetivo é ajustar o ângulo de uma junta específica (braço esquerdo) para alcançar um ângulo alvo definido, utilizando aprendizado por reforço.
 Descrição
 O programa utiliza a biblioteca coppeliasim_zmqremoteapi_client para interagir com o CoppeliaSim e controlar as juntas do robô NAO. O algoritmo de Q-Learning é configurado para aprender a melhor ação (aumentar, diminuir ou manter o ângulo) com base em uma tabela Q que mapeia estados discretos a ações.
-Principais Componentes
+Principais Componentes:
 
 Classe NAORobotController: Gerencia a conexão com o CoppeliaSim, configura as juntas do robô e executa o treinamento por Q-Learning.
 Parâmetros de Q-Learning:
@@ -18,7 +18,7 @@ ANGLE_LIMIT: Limite de ângulo (±90° em radianos).
 Recompensa: Calculada como a negativa da diferença absoluta entre o ângulo atual e o ângulo alvo.
 Exploração: Utiliza política epsilon-greedy com decaimento de epsilon.
 
-Pré-requisitos
+Pré-requisitos:
 
 Python 3.8 ou superior
 CoppeliaSim (versão compatível com a API ZMQ Remote)
@@ -34,12 +34,8 @@ Certifique-se de que o CoppeliaSim está instalado e configurado.
 Carregue a cena do robô NAO no CoppeliaSim.
 
 
-Instalar dependências:
-pip install -r requirements.txt
-
-
 Executar o programa:
-python nao_qlearning.py
+python qlearning01.py
 
 O programa iniciará a simulação, executará o treinamento por Q-Learning para alcançar um ângulo alvo de 45° e exibirá o progresso de cada episódio.
 
@@ -52,7 +48,7 @@ A simulação é parada e a conexão encerrada ao final.
 
 Estrutura do Código
 
-nao_qlearning.py: Script principal contendo a implementação do controlador e do algoritmo Q-Learning.
+qlearning01.py: Script principal contendo a implementação do controlador e do algoritmo Q-Learning.
 Classe NAORobotController:
 Métodos para conexão com CoppeliaSim, configuração de juntas, escolha de ações e atualização da tabela Q.
 Função q_learning para executar o treinamento.
