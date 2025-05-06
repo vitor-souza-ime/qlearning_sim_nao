@@ -14,7 +14,7 @@ ALPHA = 0.2  # Taxa de aprendizado
 GAMMA = 0.9  # Fator de desconto
 NUM_EPISODES = 100
 MAX_STEPS = 1
-NUM_ACTIONS = 3  # Ações: -1 (diminuir), 0 (manter), +1 (aumentar)
+NUM_ACTIONS = 5  # Ações: -0.2 rad, -0.1 rad, 0, +0.1 rad, +0.2 rad
 ANGLE_LIMIT = math.radians(90)  # Limite dos ângulos em radianos
 
 # Parâmetros de exploração
@@ -100,7 +100,8 @@ class NAORobotController:
 
             for _ in range(MAX_STEPS):
                 action = self.choose_action(state_index)
-                next_position = current_position + (action - 1) * 0.1  # Ajustar o ângulo
+                angle_adjustment = (action - 2) * 0.1  # Ações: [-0.2, -0.1, 0, +0.1, +0.2]
+                next_position = current_position + angle_adjustment
                 next_position = np.clip(next_position, -ANGLE_LIMIT, ANGLE_LIMIT)
                 
                 # Cria a lista de posições para todas as juntas
@@ -108,10 +109,8 @@ class NAORobotController:
                 positions[2] = next_position  # Ajustar o braço
                 
                 self.set_joint_positions(positions)  # Atualiza todas as posições das juntas
-                #time.sleep(0.1)
                 
                 # Calcular recompensa (quanto mais próximo do ângulo alvo, maior a recompensa)
-                                
                 target_position = math.radians(angle)  # Ângulo alvo
                 reward = -abs(target_position - next_position)     
                 
@@ -127,8 +126,8 @@ class NAORobotController:
             np_norm = (next_position + ANGLE_LIMIT) / (2 * ANGLE_LIMIT)
             np_deg = math.degrees(next_position)
             print(f"Episode {episode + 1}/{episodes} Total Reward: {total_reward:.4f} NP: {np_norm:.4f} rad: {next_position:.4f} deg: {np_deg:.2f}")
-            if abs(np_deg-angle)<=DELTA:
-                print(f"Ãngulo alvo de {angle}° encontrado.")
+            if abs(np_deg - angle) <= DELTA:
+                print(f"Ângulo alvo de {angle}° encontrado.")
                 return
             
 
@@ -143,8 +142,8 @@ class NAORobotController:
 if __name__ == "__main__":
     controller = NAORobotController()
     try:
-        controller.q_learning(NUM_EPISODES,45)
-        time.sleep(5);
+        controller.q_learning(NUM_EPISODES, 45)
+        time.sleep(5)
     except Exception as e:
         print(f"Erro durante a execução: {e}")
     finally:
