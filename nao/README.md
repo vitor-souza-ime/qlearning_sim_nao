@@ -7,7 +7,7 @@ Este projeto utiliza o algoritmo de **Q-Learning** para treinar o robô NAO a aj
 * Python 2.7
 * Naoqi SDK
 * NumPy
-* Robô NAO (físico ou simulado)
+* Robô NAO (físico)
 * Comunicação via IP
 
 ## 🧠 Descrição do Algoritmo
